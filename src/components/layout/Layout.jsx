@@ -1,120 +1,121 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+"use client"
+
+import { useState, useRef, useEffect } from "react"
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom"
 import Splash from "../Splash"
 import { useSmoothScroll } from '../../utils/useSmoothScroll';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from "framer-motion"
 
 const Layout = () => {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [searchOpen, setSearchOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [email, setEmail] = useState('');
-    const location = useLocation();
-    const navigate = useNavigate();
-    const searchRef = useRef(null);
-    const searchInputRef = useRef(null);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [searchOpen, setSearchOpen] = useState(false)
+    const [searchQuery, setSearchQuery] = useState("")
+    const [searchResults, setSearchResults] = useState([])
+    const [email, setEmail] = useState("")
+    const location = useLocation()
+    const navigate = useNavigate()
+    const searchRef = useRef(null)
+    const searchInputRef = useRef(null)
 
     // Search data - you can expand this with more content
     const searchData = [
-        { title: 'Home', path: '/', description: 'Welcome to IISPPR homepage' },
-        { title: 'About Us', path: '/about', description: 'Learn more about our organization' },
-        { title: 'Our Mission', path: '/about', description: 'Discover our mission and values' },
-        { title: 'Testimonials', path: '/testimonials', description: 'Read what people say about us' },
-        { title: 'Photo Gallery', path: '/gallery', description: 'Browse our image gallery' },
-        { title: 'Current Projects', path: '/projects', description: 'View our ongoing projects' },
-        { title: 'Project Reports', path: '/reports', description: 'Access detailed project reports' },
-        { title: 'Latest Articles', path: '/articles', description: 'Read our latest articles and news' },
-        { title: 'Environmental Articles', path: '/articles', description: 'Articles about environmental conservation' },
-        { title: 'Contact Information', path: '/contact', description: 'Get in touch with us' },
-        { title: 'Sustainability', path: '/projects', description: 'Our sustainability initiatives' },
-        { title: 'Conservation', path: '/articles', description: 'Environmental conservation topics' },
-    ];
+        { title: "Home", path: "/", description: "Welcome to IISPPR homepage" },
+        { title: "About Us", path: "/about", description: "Learn more about our organization" },
+        { title: "Our Mission", path: "/about", description: "Discover our mission and values" },
+        { title: "Testimonials", path: "/testimonials", description: "Read what people say about us" },
+        { title: "Photo Gallery", path: "/gallery", description: "Browse our image gallery" },
+        { title: "Current Projects", path: "/projects", description: "View our ongoing projects" },
+        { title: "Project Reports", path: "/reports", description: "Access detailed project reports" },
+        { title: "Latest Articles", path: "/articles", description: "Read our latest articles and news" },
+        { title: "Environmental Articles", path: "/articles", description: "Articles about environmental conservation" },
+        { title: "Contact Information", path: "/contact", description: "Get in touch with us" },
+        { title: "Sustainability", path: "/projects", description: "Our sustainability initiatives" },
+        { title: "Conservation", path: "/articles", description: "Environmental conservation topics" },
+    ]
 
     const isActive = (path) => {
-        if (path === '/' && location.pathname === '/') {
-            return true;
+        if (path === "/" && location.pathname === "/") {
+            return true
         }
-        return location.pathname === path || (path !== '/' && location.pathname.startsWith(path));
-    };
+        return location.pathname === path || (path !== "/" && location.pathname.startsWith(path))
+    }
 
     const toggleMobileMenu = () => {
-        setMobileMenuOpen(!mobileMenuOpen);
-    };
+        setMobileMenuOpen(!mobileMenuOpen)
+    }
 
     const toggleSearch = () => {
-        setSearchOpen(!searchOpen);
+        setSearchOpen(!searchOpen)
         if (!searchOpen) {
             setTimeout(() => {
-                searchInputRef.current?.focus();
-            }, 100);
+                searchInputRef.current?.focus()
+            }, 100)
         } else {
-            setSearchQuery('');
-            setSearchResults([]);
+            setSearchQuery("")
+            setSearchResults([])
         }
-    };
-
-
+    }
 
     const handleSearchChange = (e) => {
-        const query = e.target.value;
-        setSearchQuery(query);
+        const query = e.target.value
+        setSearchQuery(query)
 
-        if (query.trim() === '') {
-            setSearchResults([]);
-            return;
+        if (query.trim() === "") {
+            setSearchResults([])
+            return
         }
 
         // Filter search data based on query
-        const filtered = searchData.filter(item =>
-            item.title.toLowerCase().includes(query.toLowerCase()) ||
-            item.description.toLowerCase().includes(query.toLowerCase())
-        );
+        const filtered = searchData.filter(
+            (item) =>
+                item.title.toLowerCase().includes(query.toLowerCase()) ||
+                item.description.toLowerCase().includes(query.toLowerCase()),
+        )
 
-        setSearchResults(filtered.slice(0, 6)); // Limit to 6 results
-    };
+        setSearchResults(filtered.slice(0, 6)) // Limit to 6 results
+    }
 
     const handleSearchResultClick = (path) => {
-        navigate(path);
-        setSearchOpen(false);
-        setSearchQuery('');
-        setSearchResults([]);
-    };
+        navigate(path)
+        setSearchOpen(false)
+        setSearchQuery("")
+        setSearchResults([])
+    }
 
     const handleNewsletterSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
         // Handle newsletter subscription here
-        console.log('Newsletter subscription:', email);
-        setEmail('');
+        console.log("Newsletter subscription:", email)
+        setEmail("")
         // You can add your newsletter subscription logic here
-    };
+    }
 
     // Close search when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (searchRef.current && !searchRef.current.contains(event.target)) {
-                setSearchOpen(false);
-                setSearchQuery('');
-                setSearchResults([]);
+                setSearchOpen(false)
+                setSearchQuery("")
+                setSearchResults([])
             }
-        };
+        }
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside)
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [])
 
-    const [loading, setLoading] = useState(true);
-    useSmoothScroll();
+    const [loading, setLoading] = useState(true)
+    useSmoothScroll()
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setLoading(false);
-        }, 2000);
+            setLoading(false)
+        }, 2000)
 
-        return () => clearTimeout(timer);
-    }, []);
+        return () => clearTimeout(timer)
+    }, [])
 
     return (
         <AnimatePresence mode="wait">
@@ -135,9 +136,7 @@ const Layout = () => {
                                     <li>
                                         <Link
                                             to="/"
-                                            className={`font-medium transition-colors duration-200 ${isActive('/')
-                                                ? 'text-white border-b-2 border-blue-400 pb-1'
-                                                : 'text-gray-300 hover:text-white'
+                                            className={`font-medium transition-colors duration-200 ${isActive("/") ? "text-white border-b-2 border-blue-400 pb-1" : "text-gray-300 hover:text-white"
                                                 }`}
                                         >
                                             Home
@@ -146,9 +145,9 @@ const Layout = () => {
                                     <li>
                                         <Link
                                             to="/about"
-                                            className={`font-medium transition-colors duration-200 ${isActive('/about')
-                                                ? 'text-white border-b-2 border-blue-400 pb-1'
-                                                : 'text-gray-300 hover:text-white'
+                                            className={`font-medium transition-colors duration-200 ${isActive("/about")
+                                                ? "text-white border-b-2 border-blue-400 pb-1"
+                                                : "text-gray-300 hover:text-white"
                                                 }`}
                                         >
                                             About
@@ -157,9 +156,9 @@ const Layout = () => {
                                     <li>
                                         <Link
                                             to="/testimonials"
-                                            className={`font-medium transition-colors duration-200 ${isActive('/testimonials')
-                                                ? 'text-white border-b-2 border-blue-400 pb-1'
-                                                : 'text-gray-300 hover:text-white'
+                                            className={`font-medium transition-colors duration-200 ${isActive("/testimonials")
+                                                ? "text-white border-b-2 border-blue-400 pb-1"
+                                                : "text-gray-300 hover:text-white"
                                                 }`}
                                         >
                                             Testimonials
@@ -168,9 +167,9 @@ const Layout = () => {
                                     <li>
                                         <Link
                                             to="/gallery"
-                                            className={`font-medium transition-colors duration-200 ${isActive('/gallery')
-                                                ? 'text-white border-b-2 border-blue-400 pb-1'
-                                                : 'text-gray-300 hover:text-white'
+                                            className={`font-medium transition-colors duration-200 ${isActive("/gallery")
+                                                ? "text-white border-b-2 border-blue-400 pb-1"
+                                                : "text-gray-300 hover:text-white"
                                                 }`}
                                         >
                                             Gallery
@@ -179,9 +178,9 @@ const Layout = () => {
                                     <li>
                                         <Link
                                             to="/projects"
-                                            className={`font-medium transition-colors duration-200 ${isActive('/projects')
-                                                ? 'text-white border-b-2 border-blue-400 pb-1'
-                                                : 'text-gray-300 hover:text-white'
+                                            className={`font-medium transition-colors duration-200 ${isActive("/projects")
+                                                ? "text-white border-b-2 border-blue-400 pb-1"
+                                                : "text-gray-300 hover:text-white"
                                                 }`}
                                         >
                                             Projects
@@ -190,9 +189,9 @@ const Layout = () => {
                                     <li>
                                         <Link
                                             to="/reports"
-                                            className={`font-medium transition-colors duration-200 ${isActive('/reports')
-                                                ? 'text-white border-b-2 border-blue-400 pb-1'
-                                                : 'text-gray-300 hover:text-white'
+                                            className={`font-medium transition-colors duration-200 ${isActive("/reports")
+                                                ? "text-white border-b-2 border-blue-400 pb-1"
+                                                : "text-gray-300 hover:text-white"
                                                 }`}
                                         >
                                             Reports
@@ -201,9 +200,9 @@ const Layout = () => {
                                     <li>
                                         <Link
                                             to="/articles"
-                                            className={`font-medium transition-colors duration-200 ${isActive('/articles')
-                                                ? 'text-white border-b-2 border-blue-400 pb-1'
-                                                : 'text-gray-300 hover:text-white'
+                                            className={`font-medium transition-colors duration-200 ${isActive("/articles")
+                                                ? "text-white border-b-2 border-blue-400 pb-1"
+                                                : "text-gray-300 hover:text-white"
                                                 }`}
                                         >
                                             Articles
@@ -219,18 +218,27 @@ const Layout = () => {
                                     >
                                         Contact us
                                     </Link>
-
                                     {/* Search Container */}
                                     <div className="relative" ref={searchRef}>
                                         <button
                                             onClick={toggleSearch}
                                             className="bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white p-2 rounded-full transition-all duration-200 shadow-md"
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-5 w-5"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                                />
                                             </svg>
                                         </button>
-
                                         {/* Search Dropdown */}
                                         {searchOpen && (
                                             <div className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
@@ -244,7 +252,6 @@ const Layout = () => {
                                                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                                                     />
                                                 </div>
-
                                                 {/* Search Results */}
                                                 {searchResults.length > 0 && (
                                                     <div className="border-t border-gray-200 max-h-64 overflow-y-auto">
@@ -260,20 +267,18 @@ const Layout = () => {
                                                         ))}
                                                     </div>
                                                 )}
-
                                                 {/* No Results */}
                                                 {searchQuery && searchResults.length === 0 && (
                                                     <div className="border-t border-gray-200 p-4 text-center text-gray-500">
                                                         No results found for "{searchQuery}"
                                                     </div>
                                                 )}
-
                                                 {/* Search Suggestions when empty */}
                                                 {!searchQuery && (
                                                     <div className="border-t border-gray-200 p-4">
                                                         <div className="text-sm text-gray-600 mb-2">Popular searches:</div>
                                                         <div className="flex flex-wrap gap-2">
-                                                            {['About', 'Projects', 'Articles', 'Contact'].map((term) => (
+                                                            {["About", "Projects", "Articles", "Contact"].map((term) => (
                                                                 <button
                                                                     key={term}
                                                                     onClick={() => setSearchQuery(term)}
@@ -296,7 +301,13 @@ const Layout = () => {
                                     onClick={toggleMobileMenu}
                                     aria-label="Toggle menu"
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-6 w-6"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                                     </svg>
                                 </button>
@@ -309,7 +320,7 @@ const Layout = () => {
                                         <li>
                                             <Link
                                                 to="/"
-                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive('/') ? 'text-blue-400' : 'text-gray-300 hover:text-white'
+                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive("/") ? "text-blue-400" : "text-gray-300 hover:text-white"
                                                     }`}
                                                 onClick={toggleMobileMenu}
                                             >
@@ -319,7 +330,7 @@ const Layout = () => {
                                         <li>
                                             <Link
                                                 to="/about"
-                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive('/about') ? 'text-blue-400' : 'text-gray-300 hover:text-white'
+                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive("/about") ? "text-blue-400" : "text-gray-300 hover:text-white"
                                                     }`}
                                                 onClick={toggleMobileMenu}
                                             >
@@ -329,7 +340,7 @@ const Layout = () => {
                                         <li>
                                             <Link
                                                 to="/testimonials"
-                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive('/testimonials') ? 'text-blue-400' : 'text-gray-300 hover:text-white'
+                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive("/testimonials") ? "text-blue-400" : "text-gray-300 hover:text-white"
                                                     }`}
                                                 onClick={toggleMobileMenu}
                                             >
@@ -339,7 +350,7 @@ const Layout = () => {
                                         <li>
                                             <Link
                                                 to="/gallery"
-                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive('/gallery') ? 'text-blue-400' : 'text-gray-300 hover:text-white'
+                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive("/gallery") ? "text-blue-400" : "text-gray-300 hover:text-white"
                                                     }`}
                                                 onClick={toggleMobileMenu}
                                             >
@@ -349,7 +360,7 @@ const Layout = () => {
                                         <li>
                                             <Link
                                                 to="/projects"
-                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive('/projects') ? 'text-blue-400' : 'text-gray-300 hover:text-white'
+                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive("/projects") ? "text-blue-400" : "text-gray-300 hover:text-white"
                                                     }`}
                                                 onClick={toggleMobileMenu}
                                             >
@@ -359,7 +370,7 @@ const Layout = () => {
                                         <li>
                                             <Link
                                                 to="/reports"
-                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive('/reports') ? 'text-blue-400' : 'text-gray-300 hover:text-white'
+                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive("/reports") ? "text-blue-400" : "text-gray-300 hover:text-white"
                                                     }`}
                                                 onClick={toggleMobileMenu}
                                             >
@@ -369,7 +380,7 @@ const Layout = () => {
                                         <li>
                                             <Link
                                                 to="/articles"
-                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive('/articles') ? 'text-blue-400' : 'text-gray-300 hover:text-white'
+                                                className={`block font-medium transition-colors duration-200 py-2 ${isActive("/articles") ? "text-blue-400" : "text-gray-300 hover:text-white"
                                                     }`}
                                                 onClick={toggleMobileMenu}
                                             >
@@ -388,13 +399,24 @@ const Layout = () => {
                                         <li className="pt-2">
                                             <button
                                                 onClick={() => {
-                                                    toggleMobileMenu();
-                                                    toggleSearch();
+                                                    toggleMobileMenu()
+                                                    toggleSearch()
                                                 }}
                                                 className="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white p-3 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
                                             >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="h-5 w-5"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                                    />
                                                 </svg>
                                                 <span>Search</span>
                                             </button>
@@ -409,109 +431,133 @@ const Layout = () => {
                         <Outlet />
                     </main>
 
-                    {/* Updated Footer with Original Data */}
-                    <footer className="bg-gray-900 text-white py-12">
-                        <div className="container mx-auto px-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                                {/* Brand & Mission Section (Updated from original) */}
-                                <div className="lg:col-span-1">
-                                    <h3 className="text-2xl font-extrabold mb-2 tracking-wide">IISPPR</h3>
+                    {/* Responsive Footer */}
+                    <footer className="bg-gray-900 text-white py-8 md:py-12">
+                        <div className="container mx-auto px-4 md:px-6">
+                            {/* Main Footer Content */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 lg:gap-8">
+                                {/* Brand & Mission Section */}
+                                <div className="sm:col-span-2 lg:col-span-1 xl:col-span-1">
+                                    <h3 className="text-xl md:text-2xl font-extrabold mb-3 tracking-wide">IISPPR</h3>
                                     <p className="text-gray-300 text-sm leading-relaxed">
                                         Promoting sustainable practices and environmental conservation for a healthier planet.
                                     </p>
                                 </div>
 
-                                {/* Quick Links (Using original navigation) */}
-                                <div>
-                                    <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+                                {/* Quick Links */}
+                                <div className="min-w-0">
+                                    <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Quick Links</h4>
                                     <ul className="space-y-2">
                                         <li>
-                                            <Link to="/" className="text-gray-300 hover:text-white transition-colors duration-200">
+                                            <Link to="/" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
                                                 Home
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/about" className="text-gray-300 hover:text-white transition-colors duration-200">
+                                            <Link
+                                                to="/about"
+                                                className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                                            >
                                                 About
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/projects" className="text-gray-300 hover:text-white transition-colors duration-200">
+                                            <Link
+                                                to="/projects"
+                                                className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                                            >
                                                 Projects
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/contact" className="text-gray-300 hover:text-white transition-colors duration-200">
+                                            <Link
+                                                to="/contact"
+                                                className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                                            >
                                                 Contact
                                             </Link>
                                         </li>
                                     </ul>
                                 </div>
 
-                                {/* Get In Touch (Additional links) */}
-                                <div>
-                                    <h4 className="text-lg font-semibold mb-4">Get In Touch</h4>
+                                {/* Get In Touch */}
+                                <div className="min-w-0">
+                                    <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Get In Touch</h4>
                                     <ul className="space-y-2">
                                         <li>
-                                            <Link to="/testimonials" className="text-gray-300 hover:text-white transition-colors duration-200">
+                                            <Link
+                                                to="/testimonials"
+                                                className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                                            >
                                                 Testimonials
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/gallery" className="text-gray-300 hover:text-white transition-colors duration-200">
+                                            <Link
+                                                to="/gallery"
+                                                className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                                            >
                                                 Gallery
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/reports" className="text-gray-300 hover:text-white transition-colors duration-200">
+                                            <Link
+                                                to="/reports"
+                                                className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                                            >
                                                 Reports
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/articles" className="text-gray-300 hover:text-white transition-colors duration-200">
+                                            <Link
+                                                to="/articles"
+                                                className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                                            >
                                                 Articles
                                             </Link>
                                         </li>
                                     </ul>
                                 </div>
 
-                                {/* Address (Using original address) */}
-                                <div>
-                                    <h4 className="text-lg font-semibold mb-4">Address</h4>
+                                {/* Address */}
+                                <div className="min-w-0">
+                                    <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Address</h4>
                                     <address className="text-gray-300 text-sm not-italic leading-relaxed">
-                                        Office No. 30 Nihad Plaza,<br />
-                                        Opposite Zakir Hussain School,<br />
-                                        Civil lines, Near AMU,<br />
+                                        Office No. 30 Nihad Plaza,
+                                        <br />
+                                        Opposite Zakir Hussain School,
+                                        <br />
+                                        Civil lines, Near AMU,
+                                        <br />
                                         Aligarh 202001
                                     </address>
                                 </div>
 
-                                {/* Newsletter */}
-                                <div>
-                                    <h4 className="text-lg font-semibold mb-4">Newsletter</h4>
+                                {/* Newsletter - Responsive */}
+                                <div className="sm:col-span-2 lg:col-span-1 xl:col-span-1 min-w-0">
+                                    <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Newsletter</h4>
                                     <form onSubmit={handleNewsletterSubmit} className="space-y-3">
-                                        <div className="flex">
+                                        {/* Responsive Newsletter Form */}
+                                        <div className="flex flex-col sm:flex-row gap-2">
                                             <input
                                                 type="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 placeholder="Enter Your Email"
                                                 required
-                                                className="flex-1 max-w-[200px] sm:max-w-sm px-3 py-2 bg-gray-800 border border-gray-700 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400"
+                                                className="flex-1 min-w-0 px-3 py-2 bg-gray-800 border border-gray-700 rounded-md sm:rounded-l-md sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 text-sm"
                                             />
                                             <button
                                                 type="submit"
-                                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-r-md transition-colors duration-200 font-medium"
+                                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md sm:rounded-l-none sm:rounded-r-md transition-colors duration-200 font-medium text-sm whitespace-nowrap"
                                             >
                                                 Subscribe
                                             </button>
                                         </div>
-                                        <p className="text-gray-400 text-xs">
-                                            Your email is safe with us we don't spam
-                                        </p>
+                                        <p className="text-gray-400 text-xs">Your email is safe with us we don't spam</p>
                                     </form>
 
-                                    {/* Follow Me */}
+                                    {/* Social Media */}
                                     <div className="mt-6">
                                         <h5 className="text-sm font-semibold mb-3">Follow Me</h5>
                                         <div className="flex space-x-3">
@@ -556,19 +602,16 @@ const Layout = () => {
                                 </div>
                             </div>
 
-                            {/* Bottom Copyright (Updated with original year) */}
-                            <div className="border-t border-gray-700 mt-8 pt-6 text-center">
-                                <p className="text-gray-400 text-sm">
-                                    © {new Date().getFullYear()} IISPPR. All rights reserved.
-                                </p>
+                            {/* Bottom Copyright */}
+                            <div className="border-t border-gray-700 mt-6 md:mt-8 pt-4 md:pt-6 text-center">
+                                <p className="text-gray-400 text-sm">© {new Date().getFullYear()} IISPPR. All rights reserved.</p>
                             </div>
                         </div>
                     </footer>
                 </div>
-            )
-            }
+            )}
         </AnimatePresence>
     )
-};
+}
 
-export default Layout;
+export default Layout
